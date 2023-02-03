@@ -4,6 +4,7 @@ import {
   TableMenu,
   TooltipOnHover,
   Header,
+  DesktopNavbar,
 } from "@next/components";
 import {
   GridEventListener,
@@ -169,7 +170,6 @@ const Home = (): JSX.Element => {
     //   flex: 2,
     //   sortable: true,
     // },
-   
   ];
 
   const rows = [
@@ -228,6 +228,8 @@ const Home = (): JSX.Element => {
   ];
   return (
     <Box padding="20px">
+      <DesktopNavbar />
+      <Header />
       <CustomDataGrid id="id" columns={columns} rows={rows} />
     </Box>
   );

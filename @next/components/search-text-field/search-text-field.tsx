@@ -18,12 +18,6 @@ export const SearchTextField = ({
         "& input": {
           height: "30px !important",
         },
-        // "& .MuiInputBase-root::after": {
-        //   border: "none",
-        // },
-        // "&  .MuiInputBase-root::before": {
-        //   border: "none",
-        // },
       }}
       fullWidth
       placeholder="Search coin, pair, contract address or exchange"

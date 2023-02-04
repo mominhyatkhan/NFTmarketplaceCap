@@ -25,84 +25,19 @@ import SearchIcon from "@mui/icons-material/Search";
 import Image from "next/image";
 import * as S from "./desktop-styles";
 import Grid from "@mui/material/Grid";
-const menuItems = [
-  {
-    text: "Cryptocurrency",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-  {
-    text: "Exchanges",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-  {
-    text: "Community",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-  {
-    text: "Product",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-  {
-    text: "Learn",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-];
-export const DesktopNavbar = (): JSX.Element => {
+interface NavbarProps {
+  menuItems: {
+    text: string;
+    items: {
+      text: string;
+      icon: string;
+      link: string;
+    }[];
+  }[];
+}
+export const DesktopNavbar: React.FC<NavbarProps> = ({
+  menuItems,
+}): JSX.Element => {
   const [openSearch, setOpenSearch] = React.useState(false);
   const handleOpenSearch = () => {
     setOpenSearch(!openSearch);

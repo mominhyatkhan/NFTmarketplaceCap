@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Button } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { AutoCompleteSearch } from "@next/components";
@@ -13,7 +13,18 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-export const Header = () => {
+
+interface HeaderProps {
+  menuItems: {
+    text: string;
+    items: {
+      text: string;
+      icon: string;
+      link: string;
+    }[];
+  }[];
+}
+export const Header: React.FC<HeaderProps> = ({ menuItems }) => {
   const [openSearch, setOpenSearch] = useState(false);
   const [state, setState] = React.useState(false);
   const toggleDrawer =
@@ -33,8 +44,9 @@ export const Header = () => {
   };
   return (
     <>
-      <Box height="43px">
-        <Box display="flex" justifyContent="flex-end">
+      <Box height="43px" display="flex" alignItems="center">
+        <Image src="./next.svg" height={30} width={50} alt="logo" />
+        <Box display="flex" justifyContent="flex-end" width="100%">
           {!openSearch && (
             <>
               <IconButton onClick={handleOpenSearch}>
@@ -77,7 +89,75 @@ export const Header = () => {
               <CloseIcon />
             </IconButton>
           </Box>
-          <Accordion>
+          {menuItems.map(
+            ({
+              items,
+              text,
+            }: {
+              text: string;
+              items: {
+                text: string;
+                icon: string;
+                link: string;
+              }[];
+            }) => (
+              <Accordion disableGutters key={text}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography
+                    color="#222531"
+                    fontSize={16}
+                    fontWeight={600}
+                    lineHeight={"24px"}
+                  >
+                    {text}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {items?.map(
+                    ({
+                      text,
+                      icon,
+                      link,
+                    }: {
+                      text: string;
+                      icon: string;
+                      link: string;
+                    }) => (
+                      <Button
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "flex-start",
+                        }}
+                        key={text}
+                      >
+                        <Image src={icon} width={40} height={40} alt="icon" />
+                        <Typography
+                          paddingLeft="20px"
+                          sx={{
+                            fontSize: "16px",
+                            color: "#222531",
+                            fontWeight: 600,
+                            textTransform: "initial",
+                            lineHeight: "24px",
+                          }}
+                        >
+                          {" "}
+                          {text}{" "}
+                        </Typography>
+                      </Button>
+                    )
+                  )}
+                </AccordionDetails>
+              </Accordion>
+            )
+          )}
+
+          {/* <Accordion disableGutters>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -93,7 +173,7 @@ export const Header = () => {
               </Typography>
             </AccordionDetails>
           </Accordion>
-          <Accordion>
+          <Accordion disableGutters>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel2a-content"
@@ -108,7 +188,7 @@ export const Header = () => {
                 eget.
               </Typography>
             </AccordionDetails>
-          </Accordion>
+          </Accordion> */}
         </>
       </Drawer>
     </>

@@ -14,7 +14,83 @@ import {
 import { Box, IconButton, Typography, Button } from "@mui/material";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import Image from "next/image";
-
+const menuItems = [
+  {
+    text: "Cryptocurrency",
+    items: [
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+    ],
+  },
+  {
+    text: "Exchanges",
+    items: [
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+    ],
+  },
+  {
+    text: "Community",
+    items: [
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+    ],
+  },
+  {
+    text: "Product",
+    items: [
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+    ],
+  },
+  {
+    text: "Learn",
+    items: [
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+      {
+        text: "Ranking",
+        icon: "./next.svg",
+        link: "#",
+      },
+    ],
+  },
+];
 const Home = (): JSX.Element => {
   const columns = [
     {
@@ -228,8 +304,33 @@ const Home = (): JSX.Element => {
   ];
   return (
     <Box padding="20px">
-      <DesktopNavbar />
-      <Header />
+      <Box
+        sx={{
+          display: {
+            xl: "block",
+            lg: "block",
+            md: "none",
+            sm: "none",
+            xs: "none",
+          },
+        }}
+      >
+        <DesktopNavbar menuItems={menuItems} />
+      </Box>
+
+      <Box
+        sx={{
+          display: {
+            xl: "none",
+            lg: "none",
+            md: "block",
+            sm: "block",
+            xs: "block",
+          },
+        }}
+      >
+        <Header menuItems={menuItems} />
+      </Box>
       <CustomDataGrid id="id" columns={columns} rows={rows} />
     </Box>
   );

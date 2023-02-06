@@ -4,7 +4,6 @@ import {
   TableMenu,
   TooltipOnHover,
   Header,
-  DesktopNavbar,
 } from "@next/components";
 import {
   GridEventListener,
@@ -14,85 +13,26 @@ import {
 import { Box, IconButton, Typography, Button } from "@mui/material";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import Image from "next/image";
-const menuItems = [
-  {
-    text: "Cryptocurrency",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-  {
-    text: "Exchanges",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-  {
-    text: "Community",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-  {
-    text: "Product",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-  {
-    text: "Learn",
-    items: [
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-      {
-        text: "Ranking",
-        icon: "./next.svg",
-        link: "#",
-      },
-    ],
-  },
-];
-const Home = (): JSX.Element => {
+
+export const DemoTable = (): JSX.Element => {
   const columns = [
+    {
+      field: "rating",
+      headerName: "",
+      flex: 0.5,
+      sortable: true,
+      renderCell: ({ row }: GridRenderCellParams<string>) => (
+        <StarOutlineRoundedIcon
+          sx={{
+            height: "17px",
+            marginTop: "-7px",
+            "&:hover": {
+              fill: "#F4EA56",
+            },
+          }}
+        />
+      ),
+    },
     {
       field: "serialNo",
       headerName: "#",
@@ -115,14 +55,9 @@ const Home = (): JSX.Element => {
           }}
         >
           <Image src="./vercel.svg" width={20} height={20} alt="nft" />
-          <div>
-            <Typography fontWeight={600} fontSize="16px">
-              {row?.name}
-            </Typography>
-            <Typography fontWeight={500} fontSize="14px">
-              Etherum
-            </Typography>
-          </div>
+          <Typography paddingLeft={"3px"} fontWeight={600} fontSize="16px">
+            {row?.name}
+          </Typography>
         </Box>
       ),
     },
@@ -246,6 +181,34 @@ const Home = (): JSX.Element => {
     //   flex: 2,
     //   sortable: true,
     // },
+    {
+      field: "action",
+      headerName: "",
+      flex: 1,
+      sortable: true,
+      renderCell: ({ row }: GridRenderCellParams<string>) => (
+        <TableMenu
+          id={row?.id}
+          menuItemOptions={[
+            {
+              text: "View Chart",
+              onClick: (menuItem: string, id: string) =>
+                console.log("menu is clicked", " ", menuItem, " ", id),
+            },
+            {
+              text: "View Market",
+              onClick: (menuItem: string, id: string) =>
+                console.log("menu is clicked", " ", menuItem, " ", id),
+            },
+            {
+              text: "View Historical Data",
+              onClick: (menuItem: string, id: string) =>
+                console.log("menu is clicked", " ", menuItem, " ", id),
+            },
+          ]}
+        />
+      ),
+    },
   ];
 
   const rows = [
@@ -304,36 +267,8 @@ const Home = (): JSX.Element => {
   ];
   return (
     <Box padding="20px">
-      <Box
-        sx={{
-          display: {
-            xl: "block",
-            lg: "block",
-            md: "none",
-            sm: "none",
-            xs: "none",
-          },
-        }}
-      >
-        <DesktopNavbar menuItems={menuItems} />
-      </Box>
-
-      <Box
-        sx={{
-          display: {
-            xl: "none",
-            lg: "none",
-            md: "block",
-            sm: "block",
-            xs: "block",
-          },
-        }}
-      >
-        <Header menuItems={menuItems} />
-      </Box>
+      <Header />
       <CustomDataGrid id="id" columns={columns} rows={rows} />
     </Box>
   );
 };
-
-export default Home;

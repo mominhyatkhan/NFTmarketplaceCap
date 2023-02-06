@@ -53,7 +53,6 @@ export const CustomDataGrid = ({
           },
           "& .MuiDataGrid-columnHeaders": {
             // background: "#F5F5F5",
-            // border: '1px solid #CDCDCD',
             color: "#222531",
             alignItems: "center",
 
@@ -90,17 +89,22 @@ export const CustomDataGrid = ({
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "0px solid rgba(47, 46, 106, 0.29)",
+            padding: "0 2px",
+          },
+          "& .MuiDataGrid-row": {
+            borderBottom: "1px solid #CDCDCD",
           },
           "& .MuiDataGrid-cellContent": {
-            fontSize: "14px",
+            fontSize: "16px",
             color: "#252121",
-            fontWeight: 400,
+            fontWeight: 500,
             display: "flex",
             alignItems: "center",
             textAlign: "center",
+            padding: "0",
           },
         }}
-        rowHeight={50}
+        rowHeight={60}
         hideFooter={true}
         disableSelectionOnClick
         loading={loader}

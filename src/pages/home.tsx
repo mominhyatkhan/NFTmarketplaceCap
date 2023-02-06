@@ -5,6 +5,7 @@ import {
   TooltipOnHover,
   Header,
   DesktopNavbar,
+  NftCollectionSection,
 } from "@next/components";
 import {
   GridEventListener,
@@ -331,6 +332,7 @@ const Home = (): JSX.Element => {
       >
         <Header menuItems={menuItems} />
       </Box>
+      <NftCollectionSection />
       <CustomDataGrid id="id" columns={columns} rows={rows} />
     </Box>
   );

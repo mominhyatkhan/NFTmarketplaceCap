@@ -65,7 +65,9 @@ export const Header: React.FC<HeaderProps> = ({ menuItems }) => {
           )}
         </Box>
         {openSearch && (
-          <AutoCompleteSearch handleOpenSearch={handleOpenSearch} />
+          <Box width="100%">
+            <AutoCompleteSearch handleOpenSearch={handleOpenSearch} />
+          </Box>
         )}
       </Box>
       <Drawer

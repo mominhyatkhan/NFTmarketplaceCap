@@ -5,4 +5,6 @@ export * from "./tooltip";
 export * from "./header";
 export * from "./auto-complete";
 export * from "./search-text-field";
-export * from './desktop-navbar'
+export * from "./desktop-navbar";
+export * from "./nft-collection-section";
+export * from "./tabs";

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CustomDataGrid,
   TableMenu,
@@ -12,12 +12,19 @@ import {
   GridColumnHeaderParams,
 } from "@mui/x-data-grid";
 import { Box, IconButton, Typography, Button } from "@mui/material";
+import { Hero } from "src/components/Hero";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import Image from "next/image";
 import { ethers, utils } from "ethers";
 import Web3 from "web3";
 import erc721ABI from "src/utils/erc721-abi.json";
+import boredApeAbi from "src/utils/boredAPE-abi.json";
 import openseaABI from "src/utils/open-sea-abi.json";
+import conduitAbi from "src/utils/conduit-abi.json";
+import PenguinABI from "src/utils/penguin-abi.json";
+import axios from "axios";
+import Moralis from "moralis";
+import { EvmChain } from "@moralisweb3/common-evm-utils";
 
 const menuItems = [
   {
@@ -97,48 +104,104 @@ const menuItems = [
   },
 ];
 const Home = (): JSX.Element => {
+  const [name, setName] = useState("");
   const provider = new ethers.providers.InfuraProvider(
     "mainnet",
     "a2b8f256dc2c4886b6eab8b8459b53ba"
   );
-  const contractAddress = "0xBd3531dA5CF5857e7CfAA92426877b022e612cf8"; //contract address for Token RFOX VALT CitiXens
-  const abi = erc721ABI;
+  const contractAddress = "0x1E0049783F008A0085193E00003D00cd54003c71"; //opensea's conduit
+  const abi = openseaABI;
   const contract = new ethers.Contract(contractAddress, abi, provider);
 
-  const connectMetamask = () => {
-    console.log(contract);
-  };
+  async function getNFTOwners() {
+    //SEAPORT 1.1 CONTRACT ADDRESS "0x00000000006c3852cbEf3e08E8dF289169EdE581"
 
-  const balanceOf = async () => {
-    const totalSupply = await contract.totalSupply();
-    console.log("TOTAL SUPPLY", totalSupply.toString());
-    const owner = await contract.ownerOf("781");
-    console.log("OWNER", owner);
+    //BORED APEY SPACE GREY MY ID [3579] ADDRESS "0x8f4850b4C485E461bF3Bb9F425999F93562f1348" from "0xAF90059410e9fc1Da54afEB9faeC5aE795714aa2"
+    let address = "0x00000000006c3852cbEf3e08E8dF289169EdE581";
+    // "0xBd3531dA5CF5857e7CfAA92426877b022e612cf8" "0xe9dA256a28630EFDc637BfD4c65F0887bE1AEDa8"; //PUDGY PENGUIN DEPLOYED CONTRACT ADDRESS
+    let etherscanProvider = new ethers.providers.EtherscanProvider();
+    const contract = new ethers.Contract(address, PenguinABI, provider);
 
-    //   // Get the contract's balance in wei
-    // const balance = await provider.getBalance(contractAddress);
+    // let ts = 0;
+    // await contract
+    //   .totalSupply()
+    //   .then((res: any) => {
+    //     console.log(res.toString());
+    //     ts = res.toString();
+    //   })
+    //   .catch((e: any) => {
+    //     console.log(e);
+    //   });
+    // console.log(totalSupply);
+    // let holders: any = [];
+    // for (let i = 0; i < ts; i++) {
+    //   const tokenHolder = await contract.ownerOf(i);
+    //   // console.log(tokenHolder);
+    //   holders.push(tokenHolder);
+    // }
+    // console.log("HOLDERS", holders.length);
 
-    // // Convert the balance from wei to ether
-    // const balanceInEther = utils.formatEther(balance);
-    // console.log(`The contract's balance is: ${balanceInEther} ETH`);
-  };
+    // let uniqueChars = holders.filter((c: any, index: number) => {
+    //   return holders.indexOf(c) === index;
+    // });
+    // console.log("UNIQUE HOLDERS:", uniqueChars.length);
+    // console.log(holders);
 
-  async function getNFTOwners(startId: number, endId: number) {
-    // Set to store unique owners
-    const owners = new Set();
+    const sig =
+      "fulfillBasicOrder(address,uint256,uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,bytes32,uint256,bytes32,bytes32,uint256,tuple[],bytes)";
+    const bytes = ethers.utils.toUtf8Bytes(sig);
 
-    for (let i = startId; i <= endId; i++) {
-      // Call the `ownerOf` function to get the owner of the token
-      const owner = await contract.ownerOf(i);
-      // console.log(owner);
+    const transferEventSignature = ethers.utils.keccak256(bytes);
+    console.log(transferEventSignature.slice(0, 10));
+    // 0xfb0f3ee1 original
+    // 0xaf84e809 mine 0xf16aa6ed
 
-      // Add the owner to the set of unique owners
-      owners.add(owner);
+    const transferHistory = [];
+    const history: any = await etherscanProvider.getHistory(address);
+    console.log("FULL HISTORY OF TRANSACTIONS", history);
+
+    for (const transaction of history) {
+      // console.log("run");
+
+      if (transaction.data) {
+        const input = transaction.data.slice(0, 10);
+        if (input === "0xfb0f3ee1") {
+          transferHistory.push(transaction);
+        }
+      }
     }
-    const arrayWithoutDuplicates = Array.from(new Set(owners));
-    console.log("WithoutduplicateARRAY", arrayWithoutDuplicates.length);
+    console.log("TRANSFER RECORDS FROM HISTORY", transferHistory);
 
-    console.log(`There are ${owners.size} unique owners of the NFTs`);
+    let web3 = new Web3("https://polygon.llamarpc.com");
+
+    console.log(
+      await web3.eth.getTransactionReceipt(
+        "0x6282c5597dfc098a944ed9b5f6dfa95aaa216a196001de70b0d6659417b2235e"
+      )
+    );
+    // etherscanProvider.getHistory(address).then((history) => {
+    //   history.forEach((tx) => {
+    //     console.log(tx);
+    //   });
+    // });
+
+    //   const contractAddress = "0xBd3531dA5CF5857e7CfAA92426877b022e612cf8";
+    //   const contract = new ethers.Contract(contractAddress, PenguinABI, provider);
+
+    //   const totalSupply = await contract.totalSupply();
+
+    //   let holders: any = [];
+    //   for (let i = 0; i < totalSupply; i++) {
+    //     const tokenId = i + 1;
+    //     const tokenHolder = await contract.ownerOf(tokenId);
+    //     console.log(tokenHolder);
+    //     holders.push(tokenHolder);
+    //   }
+    //   let uniqueChars = holders.filter((c: any, index: number) => {
+    //     return holders.indexOf(c) === index;
+    //   });
+    //   console.log("Holders:", uniqueChars.length);
+    //   console.log(holders);
   }
 
   async function getFloorPrice(contractAddress: string) {
@@ -157,7 +220,6 @@ const Home = (): JSX.Element => {
     // Call the 'totalSupply' function of the contract
     const totalSupply = await contract.totalSupply();
     console.log(totalSupply.toString());
-    
 
     // Create an array to store all the sales prices
     const salesPrices = [];
@@ -184,7 +246,7 @@ const Home = (): JSX.Element => {
       // Get the transaction history for the token
       const logs = await provider.getLogs(filter);
       console.log(logs);
-      
+
       if (logs.length > 0) {
         // Get the latest transaction for the token
         const latestLog = logs[logs.length - 1];
@@ -192,7 +254,7 @@ const Home = (): JSX.Element => {
         // Get the sales price for the latest transaction
         const salesPrice = latestLog.data;
         console.log(salesPrice);
-        
+
         // Add the sales price to the array of sales prices
         salesPrices.push(+salesPrice);
       }
@@ -201,7 +263,6 @@ const Home = (): JSX.Element => {
     // Get the minimum sales price in the array
     const floorPrice = Math.min(...salesPrices);
     console.log("floorPrice", floorPrice);
-    
 
     // Return the floor price
     return floorPrice;
@@ -367,7 +428,7 @@ const Home = (): JSX.Element => {
     {
       id: 0,
       serialNo: 1,
-      name: "Tezos",
+      name: name,
       price: "$11.23",
       oneHour: "0.35%",
       twentyFourHour: "9.78%",
@@ -419,8 +480,6 @@ const Home = (): JSX.Element => {
   ];
   return (
     <Box padding="20px">
-      <button onClick={connectMetamask}>connect metamask</button>;
-      <button onClick={balanceOf}>balance</button>;
       <button
         onClick={() =>
           getFloorPrice("0x2505F3FCb671381642b10af30965a546aF2b2Cc6")
@@ -428,8 +487,8 @@ const Home = (): JSX.Element => {
       >
         Floor Price
       </button>
-      ;
-      <button onClick={() => getNFTOwners(2001, 3000)}>Number of Owners</button>
+      <button onClick={() => getNFTOwners()}>Number of Owners</button>
+
       <Box
         sx={{
           display: {
@@ -443,7 +502,7 @@ const Home = (): JSX.Element => {
       >
         <DesktopNavbar menuItems={menuItems} />
       </Box>
-
+      <Hero />
       <Box
         sx={{
           display: {
